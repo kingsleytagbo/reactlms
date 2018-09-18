@@ -8,7 +8,7 @@ import logo from './logo.svg';
 import Navigation from './components/Navigation';
 import Page from './components/Page';
 import Contact from './components/Contact';
-//import './App.css';
+import './App.css';
 
 const Home = () => (
   <div>
