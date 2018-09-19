@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 
 class Contact extends React.Component {
-
     constructor(props) {
         super(props);
         this.state =
@@ -12,6 +11,28 @@ class Contact extends React.Component {
                 Captcha: ''
             };
     }
+
+    componentDidMount() {
+        let url = 'https://codepen.io/jobs.json';
+        let init_data = {
+            FullName: 'John White',
+            EmailAddress: 'john.white@gmail.com',
+            Message: 'Testing Api',
+            Captcha: 'Xy34#4'
+        };
+        fetch(url)
+        .then(response => response.json())
+        .then(data => 
+            {
+                console.log(data);
+                this.setState(init_data)
+        })
+        .catch(error => 
+            {
+                console.log(error);
+                this.setState(init_data);
+            });
+      }
 
     handleSubmit(event) {
         console.log(this.state);
