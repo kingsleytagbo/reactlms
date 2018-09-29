@@ -19,17 +19,40 @@ class Forms extends React.Component {
 
     componentDidMount() {
         let url = 'https://codepen.io/jobs.json';
-        let init_data = {
-            FullName: 'John White',
-            EmailAddress: 'john.white@gmail.com',
-            Message: 'Testing Api',
-            Captcha: 'Xy34#4'
-        };
+        let init_data = [
+            {
+                Id:1,
+                Name: 'John White',
+                Description: 'john.white@gmail.com',
+                Label: 'Testing Api',
+                Type: 'Textbox'
+            },
+            {
+                Id:2,
+                Name: 'Mark Anthony',
+                Description: 'mark.anthnony@gmail.com',
+                Label: 'Singer',
+                Type: 'Textarea'
+            },
+            {
+                Id:3,
+                Name: 'Mary Poppins',
+                Description: 'mary.poppins@gmail.com',
+                Label: 'Pop Icon',
+                Type: 'Hidden'
+            }
+        ];
+        
+        let min = 0, max = init_data.length - 1;
+        let formId = Math.floor(Math.random() * (max - min + 1)) + min;
+        let form = init_data[formId];
+        let state = {forms:init_data, form: form};
+        console.log(formId);
         fetch(url)
             .then(response => response.json())
             .then(data => {
-                console.log(data);
-                this.setState(init_data)
+
+                this.setState(state);
             })
             .catch(error => {
                 console.log(error);
