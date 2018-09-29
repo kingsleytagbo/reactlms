@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-class Contact extends React.Component {
+class AskAQuestion extends React.Component {
     constructor(props) {
         super(props);
         this.state =
@@ -53,7 +53,7 @@ class Contact extends React.Component {
             <div>
                 <div className="row">
                     <div className="col-md-2 col-sm-0"></div>
-                    <div className="col-md-8 col-sm-12"><h3 style={{ textAlign: "underline" }}>Contact Us</h3></div>
+                    <div className="col-md-8 col-sm-12"><h3 style={{ textAlign: "underline" }}>Ask A Question</h3></div>
                     <div className="col-md-2 col-sm-0"></div>
                 </div>
                 <div className="row">
@@ -98,7 +98,7 @@ class Contact extends React.Component {
                                     </div>
                                 </div>
 
-                                <footer> <button className="btn btn-lg btn-info btn-block" type="submit">&raquo;&nbsp;Contact&nbsp;&laquo;</button></footer>
+                                <footer> <button className="btn btn-lg btn-info btn-block" type="submit">&raquo;&nbsp;Ask&nbsp;&laquo;</button></footer>
                             </form>
                         </div>
                     </div>
@@ -109,4 +109,4 @@ class Contact extends React.Component {
     }
 }
 
-export default Contact;
+export default AskAQuestion;

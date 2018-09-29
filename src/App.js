@@ -8,6 +8,8 @@ import logo from './logo.svg';
 import Navigation from './components/Navigation';
 import Page from './components/Page';
 import Contact from './components/Contact';
+import AskAQuestion from './components/AskAQuestion';
+import Forms from './components/Forms';
 import './App.css';
 
 const Home = () => (
@@ -75,8 +77,8 @@ class App extends Component {
               <div className="collapse navbar-collapse" id="navbarText">
                 <ul className="navbar-nav mr-auto">
                   <li className="nav-item"><Link className="nav-link" to="/">Home</Link></li>
-                  <li className="nav-item"><Link className="nav-link" to="/topics">Topics</Link></li>
-                  <li className="nav-item"><Link className="nav-link" to="/ask-a-question">Ask A Question</Link></li>
+                  <li className="nav-item"><Link className="nav-link" to="/forms">Forms</Link></li>
+                  <li className="nav-item"><Link className="nav-link" to="/askaquestion">Ask A Question</Link></li>
                   <li className="nav-item"><Link className="nav-link" to="/contact">Contact</Link></li>
                 </ul>
               </div>
@@ -85,7 +87,9 @@ class App extends Component {
               <div><hr /></div>
                 {this.props.children}
               <Route exact path="/" component={Home} />
+              <Route path="/askaquestion" component={AskAQuestion} />
               <Route path="/contact" component={Contact} />
+              <Route path="/forms" component={Forms} />
               <Route path="/topics" component={Topics} />
             </div >
           </div>
