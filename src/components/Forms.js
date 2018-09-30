@@ -66,26 +66,46 @@ class Forms extends React.Component {
     }
 
     handleChange(event) {
-        /*
-          match corresponding values in state
-        */
         event.preventDefault();
         let state = { [event.target.name]: event.target.value };
-        this.setState(state);
-        console.log(event);
-        console.log(event);
+
+        let stateCopy = Object.assign({}, this.state);
+        stateCopy.form[event.target.name] = event.target.value;
+
+        console.log(stateCopy);
+        this.setState(stateCopy);
+        //this.setState(state);
     }
 
     handleClick(param, e) {
         var isEditing = !this.state.isEditing;
         this.setState({ isEditing: isEditing });
-        if (e == 0) {
-            let form = this.getRandomForm();
+
+        let form = this.getForm(e);
+
+        if(form != null)
+        {
+            console.log(form);
+            console.log('Event', e);
             this.setState({ form: form });
         }
-        console.log(this.state);
-        console.log('Parameter', param);
-        console.log('Event', e);
+        if (e == 0) {
+            //let form = this.getRandomForm();
+            //this.setState({ form: form });
+        }
+    }
+
+    getForm(id) {
+        let form = null;
+        for(let f = 0; f < this.state.forms.length; f++)
+        {
+            if(id === this.state.forms[f].Id)
+            {
+                form = this.state.forms[f];
+                break;
+            }
+        }
+        return form;
     }
 
     getRandomForm() {
@@ -111,11 +131,20 @@ class Forms extends React.Component {
                                             <div className="form-row text-left">
                                                 <div className="form-group col-lg-12">
                                                     <div className="input-icon">
-                                                        <label>*Your Full Name:</label>
-                                                        <input type="text" id="FullName" name="FullName" className="form-control input-md" required placeholder="*Your Name" required value={this.state.form.Name} onChange={this.handleChange.bind(this)} />
+                                                        <label>*Name:</label>
+                                                        <input type="text" id="Name" name="Name" className="form-control input-md" required placeholder="*Name" required value={this.state.form.Name} onChange={this.handleChange.bind(this)} />
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div className="form-row text-left">
+                                                <div className="form-group col-lg-12">
+                                                    <div className="input-icon">
+                                                        <label>*Description:</label>
+                                                        <textarea id="Description" name="Description" className="form-control input-md" required placeholder="*Description" required value={this.state.form.Description} onChange={this.handleChange.bind(this)} />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
                                         </form>
                                     </div>
                                 </div>
@@ -128,19 +157,21 @@ class Forms extends React.Component {
             )
         }
         else {
-            return (
-                <div className="row">
-                    <div className="col-md-2"></div>
-                    <div className="col-md-8">
-                        <h3 style={{ textAlign: "underline" }}>{this.state.form.Name}</h3>
-                        <div>{this.state.form.Description}</div>
-                        <div><p>Label: {this.state.form.Label}</p></div>
-                        <div><p>Type: {this.state.form.Type}</p></div>
-                        <div><p><button id="Edit" name="Edit1" type="button" className="btn btn-sm btn-info btn-block" onClick={this.handleClick.bind(this, this.state.form.Id)}>Edit </button></p></div>
+            return this.state.forms.map(item => {
+                return (
+                    <div className="row">
+                        <div className="col-md-2"></div>
+                        <div className="col-md-8">
+                            <h3 style={{ textAlign: "underline" }}>{item.Name}</h3>
+                            <div>{item.Description}</div>
+                            <div><p>Label: {item.Label}</p></div>
+                            <div><p>Type: {item.Type}</p></div>
+                            <div><p><button id="Edit" name="Edit1" type="button" className="btn btn-sm btn-info btn-block" onClick={this.handleClick.bind(this, item.Id)}>Edit </button></p></div>
+                        </div>
+                        <div className="col-md-2"></div>
                     </div>
-                    <div className="col-md-2"></div>
-                </div>
-            );
+                );
+            });
         }
     }
 }
