@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 
 class AskAQuestion extends React.Component {
     constructor(props) {
@@ -74,7 +74,7 @@ class AskAQuestion extends React.Component {
                                     <div className="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                         <div className="input-icon">
                                             <label>*Your Email Address:</label>
-                                            <input type="email" id="EmailAddress" name="EmailAddress" className="form-control" required placeholder="*Your Email Address" value={this.state.EmailAddress} onChange={this.handleChange.bind(this)} />
+                                            <input type="email" id="EmailAddress" className="form-control" required placeholder="*Your Email Address" value={this.state.EmailAddress} onChange={this.handleChange.bind(this)} />
                                         </div>
                                     </div>
                                 </div>
@@ -92,7 +92,7 @@ class AskAQuestion extends React.Component {
                                 <div className="form-row text-left">
                                     <div className="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                         <div className="input-icon">
-                                            <label ><img src="http://members.itcareercoach.com/signups/showcaptcha" alt="Captcha image" /> *Enter captcha below &darr;</label>
+                                            <label ><img src="http://members.itcareercoach.com/signups/showcaptcha" title="Enter Captcha" alt="Enter  Captcha"/> *Enter ca ptcha below &darr;</label>
                                             <input type="text" id="Captcha" name="Captcha" className="form-control" required placeholder="*Enter Captcha" value={this.state.Captcha} onChange={this.handleChange.bind(this)} />
                                         </div>
                                     </div>

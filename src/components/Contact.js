@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 
 class Contact extends React.Component {
     constructor(props) {
@@ -12,7 +12,7 @@ class Contact extends React.Component {
             };
     }
 
-    componentDidMount() {
+    componentWillMount() {
         let url = 'https://codepen.io/jobs.json';
         let init_data = {
             FullName: 'John White',
@@ -24,18 +24,20 @@ class Contact extends React.Component {
         .then(response => response.json())
         .then(data => 
             {
-                console.log(data);
-                this.setState(init_data)
+                //console.log(init_data);
+                //this.setState(init_data)
+                //console.log(this.state);
+                //console.log(this.props);
         })
         .catch(error => 
             {
-                console.log(error);
-                this.setState(init_data);
+                //console.log(error);
+                //this.setState(init_data);
             });
       }
 
     handleSubmit(event) {
-        console.log(this.state);
+        //console.log(this.state);
         event.preventDefault();
     }
 
@@ -74,7 +76,7 @@ class Contact extends React.Component {
                                     <div className="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                         <div className="input-icon">
                                             <label>*Your Email Address:</label>
-                                            <input type="email" id="EmailAddress" name="EmailAddress" className="form-control" required placeholder="*Your Email Address" value={this.state.EmailAddress} onChange={this.handleChange.bind(this)} />
+                                            <input type="email" id="EmailAddress"  className="form-control" required placeholder="*Your Email Address" value={this.state.EmailAddress} onChange={this.handleChange.bind(this)} />
                                         </div>
                                     </div>
                                 </div>
@@ -92,7 +94,7 @@ class Contact extends React.Component {
                                 <div className="form-row text-left">
                                     <div className="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                         <div className="input-icon">
-                                            <label ><img src="http://members.itcareercoach.com/signups/showcaptcha" alt="Captcha image" /> *Enter captcha below &darr;</label>
+                                            <label ><img src="http://members.itcareercoach.com/signups/showcaptcha" title="Enter  Captcha" alt="Enter  Captcha" /> *Enter captcha below &darr;</label>
                                             <input type="text" id="Captcha" name="Captcha" className="form-control" required placeholder="*Enter Captcha" value={this.state.Captcha} onChange={this.handleChange.bind(this)} />
                                         </div>
                                     </div>

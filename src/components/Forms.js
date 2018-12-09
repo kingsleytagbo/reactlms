@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 
 class Forms extends React.Component {
     constructor(props) {
@@ -17,7 +17,7 @@ class Forms extends React.Component {
         };
     }
 
-    componentDidMount() {
+    componentWillMount() {
         let url = 'https://codepen.io/jobs.json';
         let init_data = [
             {
@@ -47,7 +47,7 @@ class Forms extends React.Component {
         let formId = Math.floor(Math.random() * (max - min + 1)) + min;
         let form = init_data[formId];
         let state = { forms: init_data, form: form };
-        console.log(formId);
+        console.log(state);
         fetch(url)
             .then(response => response.json())
             .then(data => {
@@ -67,7 +67,7 @@ class Forms extends React.Component {
 
     handleChange(event) {
         event.preventDefault();
-        let state = { [event.target.name]: event.target.value };
+        //let state = { [event.target.name]: event.target.value };
 
         let stateCopy = Object.assign({}, this.state);
         stateCopy.form[event.target.name] = event.target.value;
@@ -82,25 +82,50 @@ class Forms extends React.Component {
         this.setState({ isEditing: isEditing });
 
         let form = this.getForm(e);
+        console.log({ e: e, param: param });
 
-        if(form != null)
-        {
-            console.log(form);
+        if (form != null) {
+            //console.log(form);
             console.log('Event', e);
             this.setState({ form: form });
         }
-        if (e == 0) {
+        if (e === 0) {
             //let form = this.getRandomForm();
             //this.setState({ form: form });
         }
     }
 
+    handleCancel() {
+        this.setState({ isEditing: !this.state.isEditing });
+    }
+
+    handleDelete(param, e) {
+        var isEditing = !this.state.isEditing;
+        this.setState({ isEditing: isEditing });
+        console.log('Delete: ' + e);
+    }
+
+    handleAddNew(param, e) {
+        this.setState(
+            {
+                isEditing: true,
+                form:
+                {
+                    Id: 0,
+                    Name: '',
+                    Description: '',
+                    Label: '',
+                    Type: ''
+                }
+            });
+
+        console.log('Add New: ' + e);
+    }
+
     getForm(id) {
         let form = null;
-        for(let f = 0; f < this.state.forms.length; f++)
-        {
-            if(id === this.state.forms[f].Id)
-            {
+        for (let f = 0; f < this.state.forms.length; f++) {
+            if (id === this.state.forms[f].Id) {
                 form = this.state.forms[f];
                 break;
             }
@@ -122,7 +147,7 @@ class Forms extends React.Component {
                     <div className="col-md-2"></div>
                     <div className="col-md-8">
                         <div>
-                            <h1>Edit Forms</h1>
+                            <h1>Manage Forms</h1>
                             <div className="row">
                                 <div className="col-md-2 col-sm-0"></div>
                                 <div className="col-md-8 col-sm-12">
@@ -144,12 +169,15 @@ class Forms extends React.Component {
                                                     </div>
                                                 </div>
                                             </div>
-                                            
+
                                         </form>
                                     </div>
                                 </div>
                             </div>
-                            <div><p><button id="Edit" name="Edit1" type="button" className="btn btn-sm btn-info btn-block" onClick={this.handleClick.bind(this, 0)}>Save</button></p></div>
+                            <div className="row">
+                                <div className="col-sm-6"><button id="Edit" name="Edit1" type="button" className="btn btn-sm btn-info btn-block" onClick={this.handleClick.bind(this, 0)}>Save</button></div>
+                                <div className="col-sm-6"><button id="Cancel" name="Cancel1" type="button" className="btn btn-sm btn-default btn-block" onClick={this.handleDelete.bind(this, 0)}>Cancel</button></div>
+                            </div>
                         </div>
                     </div>
                     <div className="col-md-2"></div>
@@ -157,21 +185,30 @@ class Forms extends React.Component {
             )
         }
         else {
-            return this.state.forms.map(item => {
-                return (
-                    <div className="row">
-                        <div className="col-md-2"></div>
-                        <div className="col-md-8">
-                            <h3 style={{ textAlign: "underline" }}>{item.Name}</h3>
-                            <div>{item.Description}</div>
-                            <div><p>Label: {item.Label}</p></div>
-                            <div><p>Type: {item.Type}</p></div>
-                            <div><p><button id="Edit" name="Edit1" type="button" className="btn btn-sm btn-info btn-block" onClick={this.handleClick.bind(this, item.Id)}>Edit </button></p></div>
-                        </div>
-                        <div className="col-md-2"></div>
+            const forms = this.state.forms.map((item) =>
+                <div className="row" key={item.Id}>
+                    <div className="col-md-8">
+                        <div style={{ textAlign: 'underline', fontWeight: 'bold' }}>{item.Name}</div>
+                        <div>{item.Description}</div>
+                        <div>Label: {item.Label}</div>
+                        <div>Type: {item.Type}</div>
+                        <div><p></p></div>
                     </div>
-                );
-            });
+                    <div className="col-md-2"> <div><p><button id="Edit" name="Edit1" type="button" className="btn btn-sm btn-info btn-block" onClick={this.handleClick.bind(this, item.Id)}>Edit </button></p></div></div>
+                    <div className="col-md-2"> <div><p><button id="Delete" name="Delete1" type="button" className="btn btn-sm btn-default btn-block" onClick={this.handleClick.bind(this, item.Id)}>Delete</button></p></div></div>
+                </div>
+            );
+
+            return (
+                <div className="container">
+                    <div className="row"><div className="col-md-12"><button id="AddNew" name="AddNew" type="button" className="btn btn-sm btn-info btn-block" onClick={this.handleAddNew.bind(this, 0)}>Add New </button></div></div>
+                    <div className="row">
+                        <div className="col-md-12">
+                            {forms}
+                        </div>
+                    </div>
+                </div>
+            );
         }
     }
 }
