@@ -2,80 +2,36 @@ import React from "react";
 import database from "../Data/LocalStorageData";
 
 const DATA_KEYID = 'Forms';
-const EDIT_MODES = 
+const EDIT_MODES =
 {
     NONE: "None",
     EDIT: "Editing",
     DELETE: "Deleting",
     ADD: "Adding"
-  };
-  
+};
+
 class Forms extends React.Component {
     constructor(props) {
         super(props);
         this.handleClick = this.handleClick.bind(this, 'Parameter');
+        this.handleDelete = this.handleDelete.bind(this, 'Parameter');
         this.state = {
             isEditing: false,
             editMode: EDIT_MODES.NONE,
             forms: [],
-            form: {
-                Id: 0,
-                Name: '',
-                Description: '',
-                Label: '',
-                Type: ''
-            }
+            form: database.getModel()
         };
     }
 
     componentWillMount() {
-    
-        let url = 'https://codepen.io/jobs.json';
-        let init_data = [
-            {
-                Id: 1,
-                Name: 'John White',
-                Description: 'john.white@gmail.com',
-                Label: 'Testing Api',
-                Type: 'Textbox'
-            },
-            {
-                Id: 2,
-                Name: 'Mark Anthony',
-                Description: 'mark.anthnony@gmail.com',
-                Label: 'Singer',
-                Type: 'Textarea'
-            },
-            {
-                Id: 3,
-                Name: 'Mary Poppins',
-                Description: 'mary.poppins@gmail.com',
-                Label: 'Pop Icon',
-                Type: 'Hidden'
-            }
-        ];
 
-        //let min = 0, max = init_data.length - 1;
-        //let formId = Math.floor(Math.random() * (max - min + 1)) + min;
+        database.removeAll(DATA_KEYID);
         let data = database.fetch(DATA_KEYID);
         console.log(data);
-        let form = data[0];
-        let state = { forms: data, form: data[0] };
+        let form = database.getModel();
+        let state = { forms: data, form: form };
         //console.log(data);
         this.setState(state);
-        //console.log(state);
-        /*
-        data
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-                this.setState(state);
-            })
-            .catch(error => {
-                console.log(error);
-                this.setState(init_data);
-            });
-            */
     }
 
     handleSubmit(event) {
@@ -90,7 +46,7 @@ class Forms extends React.Component {
         let stateCopy = Object.assign({}, this.state);
         stateCopy.form[event.target.name] = event.target.value;
 
-        console.log(stateCopy);
+        //console.log(stateCopy);
         this.setState(stateCopy);
         //this.setState(state);
     }
@@ -100,47 +56,51 @@ class Forms extends React.Component {
         this.setState({ isEditing: isEditing, editMode: EDIT_MODES.EDIT });
 
         let form = this.getForm(e);
-        //console.log({ e: e, param: param });
-
         if (form != null) {
-            //console.log(form);
-            //console.log('Event', e);
             this.setState({ form: form });
         }
-        if (e === 0) {
-            //let form = this.getRandomForm();
-            //this.setState({ form: form });
-        }
+
+        console.log("handleClick: " + e);
+        console.log(form);
     }
 
-    handleSave(){
-        let data =  database.fetch(DATA_KEYID);
+    handleDelete(param, e) {
+        this.setState({ isEditing: true, editMode: EDIT_MODES.DELETE });
+        let form = this.getForm(e);
+        if (form != null) {
+            this.setState({ form: form });
+        }
+        console.log("handleDelete: " + e);
+        console.log(form);
+    }
+
+    handleSave() {
+        let data = database.fetch(DATA_KEYID);
         let form = this.state.form;
         let id = this.state.form.Id;
 
-        if(this.state.editMode === EDIT_MODES.ADD){
-            console.log('handleSave: ');
+        if (this.state.editMode === EDIT_MODES.ADD) {
+            console.log('Saving Add: ');
             database.save(DATA_KEYID, this.state.form);
             let forms = database.fetch(DATA_KEYID);
-            this.setState({forms: forms});
+            this.setState({ forms: forms });
         }
-        else if(this.state.editMode === EDIT_MODES.EDIT){
-            data = form;
+        else if (this.state.editMode === EDIT_MODES.EDIT) {
             database.save(DATA_KEYID, [this.state.form]);
-            console.log(this.state);
+            console.log('Saving Edit: ');
         }
-        this.setState({isEditing: false, editMode: EDIT_MODES.NONE});
+        else if (this.state.editMode === EDIT_MODES.DELETE) {
+            let deleted = database.removeOne(DATA_KEYID, form);
+            let forms = database.fetch(DATA_KEYID);
+            this.setState({ forms: forms });
+            console.log('Delete Item: ' + deleted);
+        }
+        this.setState({ isEditing: false, editMode: EDIT_MODES.NONE });
         console.log(this.state);
     }
 
     handleCancel() {
-        this.setState({ isEditing: false,  editMode: EDIT_MODES.NONE});
-    }
-
-    handleDelete(param, e) {
-        this.setState({isEditing: true,  editMode: EDIT_MODES.DELETE });
-        console.log("handleDelete");
-        console.log(this.state);
+        this.setState({ isEditing: false, editMode: EDIT_MODES.NONE });
     }
 
     handleAddNew(param, e) {
@@ -148,17 +108,10 @@ class Forms extends React.Component {
             {
                 isEditing: true,
                 editMode: EDIT_MODES.ADD,
-                form:
-                {
-                    Id: 0,
-                    Name: '',
-                    Description: '',
-                    Label: '',
-                    Type: ''
-                }
+                form: database.getModel()
             });
 
-        console.log('Add New: ');
+        console.log('Click > handleAddNew: ');
         console.log(this.state);
     }
 
