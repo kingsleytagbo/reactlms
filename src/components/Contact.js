@@ -12,7 +12,7 @@ class Contact extends React.Component {
             };
     }
 
-    componentWillMount() {
+    componentDidMount() {
         let url = 'https://codepen.io/jobs.json';
         let init_data = {
             FullName: 'John White',
