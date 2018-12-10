@@ -24,13 +24,13 @@ class Forms extends React.Component {
     }
 
     componentWillMount() {
-
-        database.removeAll(DATA_KEYID);
+        //use this to remove all data in storage
+        //database.removeAll(DATA_KEYID);
         let data = database.fetch(DATA_KEYID);
+        console.log("componentWillMount > database.fetch")
         console.log(data);
         let form = database.getModel();
         let state = { forms: data, form: form };
-        //console.log(data);
         this.setState(state);
     }
 
@@ -41,14 +41,11 @@ class Forms extends React.Component {
 
     handleChange(event) {
         event.preventDefault();
-        //let state = { [event.target.name]: event.target.value };
 
         let stateCopy = Object.assign({}, this.state);
         stateCopy.form[event.target.name] = event.target.value;
 
-        //console.log(stateCopy);
         this.setState(stateCopy);
-        //this.setState(state);
     }
 
     handleClick(param, e) {
@@ -59,9 +56,6 @@ class Forms extends React.Component {
         if (form != null) {
             this.setState({ form: form });
         }
-
-        console.log("handleClick: " + e);
-        console.log(form);
     }
 
     handleDelete(param, e) {
@@ -70,8 +64,6 @@ class Forms extends React.Component {
         if (form != null) {
             this.setState({ form: form });
         }
-        console.log("handleDelete: " + e);
-        console.log(form);
     }
 
     handleSave() {
@@ -80,23 +72,19 @@ class Forms extends React.Component {
         let id = this.state.form.Id;
 
         if (this.state.editMode === EDIT_MODES.ADD) {
-            console.log('Saving Add: ');
             database.save(DATA_KEYID, this.state.form);
             let forms = database.fetch(DATA_KEYID);
             this.setState({ forms: forms });
         }
         else if (this.state.editMode === EDIT_MODES.EDIT) {
             database.save(DATA_KEYID, [this.state.form]);
-            console.log('Saving Edit: ');
         }
         else if (this.state.editMode === EDIT_MODES.DELETE) {
             let deleted = database.removeOne(DATA_KEYID, form);
             let forms = database.fetch(DATA_KEYID);
             this.setState({ forms: forms });
-            console.log('Delete Item: ' + deleted);
         }
         this.setState({ isEditing: false, editMode: EDIT_MODES.NONE });
-        console.log(this.state);
     }
 
     handleCancel() {
@@ -110,9 +98,6 @@ class Forms extends React.Component {
                 editMode: EDIT_MODES.ADD,
                 form: database.getModel()
             });
-
-        console.log('Click > handleAddNew: ');
-        console.log(this.state);
     }
 
     getForm(id) {
