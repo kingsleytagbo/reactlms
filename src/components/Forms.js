@@ -27,15 +27,12 @@ class Forms extends React.Component {
         //use this to remove all data in storage
         //database.removeAll(DATA_KEYID);
         let data = database.fetch(DATA_KEYID);
-        console.log("componentWillMount > database.fetch")
-        console.log(data);
         let form = database.getModel();
         let state = { forms: data, form: form };
         this.setState(state);
     }
 
     handleSubmit(event) {
-        console.log(this.state);
         event.preventDefault();
     }
 
@@ -77,7 +74,7 @@ class Forms extends React.Component {
             this.setState({ forms: forms });
         }
         else if (this.state.editMode === EDIT_MODES.EDIT) {
-            database.save(DATA_KEYID, [this.state.form]);
+            database.save(DATA_KEYID, this.state.form);
         }
         else if (this.state.editMode === EDIT_MODES.DELETE) {
             let deleted = database.removeOne(DATA_KEYID, form);
