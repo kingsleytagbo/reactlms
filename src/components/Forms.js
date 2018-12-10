@@ -114,7 +114,7 @@ class Forms extends React.Component {
                     <div className="col-md-2"></div>
                     <div className="col-md-8">
                         <div>
-                            <FormsHeader editMode={EDIT_MODES.editMode} />
+                            <FormsHeader editMode={this.state.editMode} />
                             <div className="row">
                                 <div className="col-md-2 col-sm-0"></div>
                                 <div className="col-md-8 col-sm-12">
@@ -167,7 +167,8 @@ class Forms extends React.Component {
             return (
                 <div className="container">
                 
-                    <div className="row"><div className="col-md-8"> <FormsHeader editMode={EDIT_MODES.NONE} /></div> <div className="col-md-4"><button id="AddNew" name="AddNew" type="button" className="btn btn-sm btn-info btn-block" onClick={this.handleAddNew.bind(this, 0)}>Add New </button></div></div>
+                    <div className="row"><div className="col-md-8"> <FormsHeader editMode={this.state.editMode} /></div> 
+                    <div className="col-md-4"><button id="AddNew" name="AddNew" type="button" className="btn btn-sm btn-info btn-block" onClick={this.handleAddNew.bind(this, 0)}>Add New </button></div></div>
                     <div className="row"><div className="col-md-12"><div><hr /></div></div></div>
                     <div className="row">
                         <div className="col-md-12">
