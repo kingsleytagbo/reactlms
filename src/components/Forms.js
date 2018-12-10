@@ -1,5 +1,6 @@
 import React from "react";
 import database from "../Data/LocalStorageData";
+import FormsHeader from "../components/FormsHeader";
 
 const DATA_KEYID = 'Forms';
 const EDIT_MODES =
@@ -64,9 +65,7 @@ class Forms extends React.Component {
     }
 
     handleSave() {
-        let data = database.fetch(DATA_KEYID);
         let form = this.state.form;
-        let id = this.state.form.Id;
 
         if (this.state.editMode === EDIT_MODES.ADD) {
             database.save(DATA_KEYID, this.state.form);
@@ -77,7 +76,7 @@ class Forms extends React.Component {
             database.save(DATA_KEYID, this.state.form);
         }
         else if (this.state.editMode === EDIT_MODES.DELETE) {
-            let deleted = database.removeOne(DATA_KEYID, form);
+            database.removeOne(DATA_KEYID, form);
             let forms = database.fetch(DATA_KEYID);
             this.setState({ forms: forms });
         }
@@ -115,7 +114,7 @@ class Forms extends React.Component {
                     <div className="col-md-2"></div>
                     <div className="col-md-8">
                         <div>
-                            <h2>Manage Forms</h2>
+                            <FormsHeader editMode={EDIT_MODES.editMode} />
                             <div className="row">
                                 <div className="col-md-2 col-sm-0"></div>
                                 <div className="col-md-8 col-sm-12">
@@ -158,8 +157,6 @@ class Forms extends React.Component {
                     <div className="col-md-8">
                         <div style={{ textAlign: 'underline', fontWeight: 'bold' }}>{item.Name}</div>
                         <div>{item.Description}</div>
-                        <div>Label: {item.Label}</div>
-                        <div>Type: {item.Type}</div>
                         <div><p></p></div>
                     </div>
                     <div className="col-md-2"> <div><p><button id="Edit" name="Edit1" type="button" className="btn btn-sm btn-info btn-block" onClick={this.handleClick.bind(this, item.Id)}>Edit </button></p></div></div>
@@ -169,7 +166,8 @@ class Forms extends React.Component {
 
             return (
                 <div className="container">
-                    <div className="row"><div className="col-md-8"><h2>All Forms</h2></div> <div className="col-md-4"><button id="AddNew" name="AddNew" type="button" className="btn btn-sm btn-info btn-block" onClick={this.handleAddNew.bind(this, 0)}>Add New </button></div></div>
+                
+                    <div className="row"><div className="col-md-8"> <FormsHeader editMode={EDIT_MODES.NONE} /></div> <div className="col-md-4"><button id="AddNew" name="AddNew" type="button" className="btn btn-sm btn-info btn-block" onClick={this.handleAddNew.bind(this, 0)}>Add New </button></div></div>
                     <div className="row"><div className="col-md-12"><div><hr /></div></div></div>
                     <div className="row">
                         <div className="col-md-12">
