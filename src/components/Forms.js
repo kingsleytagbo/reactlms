@@ -11,6 +11,9 @@ const EDIT_MODES =
     DELETE: "Deleting",
     ADD: "Adding"
 };
+const invalidFeedbackStyle = {
+    display: 'block'
+};
 
 class Forms extends React.Component {
     constructor(props) {
@@ -23,7 +26,11 @@ class Forms extends React.Component {
             isEditing: false,
             editMode: EDIT_MODES.NONE,
             forms: [],
-            form: database.getModel()
+            form: database.getModel(),
+            errors: {
+                Name: { valid: true, text: '' },
+                Description: { valid: true, text: '' }
+            }
         };
     }
 
@@ -75,14 +82,14 @@ class Forms extends React.Component {
         const form = this.state.form;
 
         if (this.state.editMode === EDIT_MODES.ADD) {
-            if (this.validateForm()) {
+            if (this.validateForm().isValid) {
                 database.save(DATA_KEYID, this.state.form);
                 let forms = database.fetch(DATA_KEYID);
                 this.setState({ forms: forms, isEditing: false, editMode: EDIT_MODES.NONE });
             }
         }
         else if (this.state.editMode === EDIT_MODES.EDIT) {
-            if (this.validateForm()) {
+            if (this.validateForm().isValid) {
                 database.save(DATA_KEYID, this.state.form);
                 this.setState({ isEditing: false, editMode: EDIT_MODES.NONE });
             }
@@ -109,20 +116,30 @@ class Forms extends React.Component {
 
     validateForm() {
         let isValid = true;
+        let errors = {
+            Name: { valid: true, text: '' },
+            Description: { valid: true, text: '' }
+        };
 
         const form = this.state.form;
         const name = form.Name;
         const description = form.Description;
 
         if (!name || name.length === 0) {
+            errors.Name.valid = false;
+            errors.Name.text = "*Name is required";
             isValid = false;
         }
 
         if (!description || description.length === 0) {
+            errors.Description.valid = false;
+            errors.Description.text = "*Description is required";
             isValid = false;
         }
 
-        return isValid;
+        this.setState({ errors: errors });
+
+        return { isValid: isValid, errors: errors };
     }
 
     getForm(id) {
@@ -152,7 +169,10 @@ class Forms extends React.Component {
                                                 <div className="form-group col-lg-12">
                                                     <div className="input-icon">
                                                         <label>*Name:</label>
-                                                        <input type="text" id="Name" name="Name" className="form-control input-md" required placeholder="*Name" required value={this.state.form.Name} onChange={this.handleChange.bind(this)} />
+                                                        <span className="invalid-feedback" style={invalidFeedbackStyle}>{this.state.errors.Name.text}</span>
+                                                        <input className={"form-control input-md" + (this.state.errors.Name.valid ? ' is-valid' : ' is-invalid')}
+                                                        type="text" id="Name" name="Name" 
+                                                        required placeholder="*Name" required value={this.state.form.Name} onChange={this.handleChange.bind(this)} />
                                                     </div>
                                                 </div>
                                             </div>
@@ -160,7 +180,9 @@ class Forms extends React.Component {
                                                 <div className="form-group col-lg-12">
                                                     <div className="input-icon">
                                                         <label>*Description:</label>
-                                                        <textarea id="Description" name="Description" className="form-control input-md" required placeholder="*Description" required value={this.state.form.Description} onChange={this.handleChange.bind(this)} />
+                                                        <span className="invalid-feedback" style={invalidFeedbackStyle}>{this.state.errors.Description.text}</span>
+                                                        <textarea className={"form-control input-md"  + (this.state.errors.Description.valid ? ' is-valid' : ' is-invalid')}
+                                                        id="Description" name="Description" required placeholder="*Description" required value={this.state.form.Description} onChange={this.handleChange.bind(this)} />
                                                     </div>
                                                 </div>
                                             </div>
