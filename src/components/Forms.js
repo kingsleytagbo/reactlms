@@ -1,3 +1,4 @@
+import ReactDOM from 'react-dom';
 import React from "react";
 import database from "../Data/LocalStorageData";
 import FormsHeader from "../components/FormsHeader";
@@ -14,8 +15,10 @@ const EDIT_MODES =
 class Forms extends React.Component {
     constructor(props) {
         super(props);
+
         this.handleClick = this.handleClick.bind(this, 'Parameter');
         this.handleDelete = this.handleDelete.bind(this, 'Parameter');
+
         this.state = {
             isEditing: false,
             editMode: EDIT_MODES.NONE,
@@ -35,6 +38,10 @@ class Forms extends React.Component {
 
     handleSubmit(event) {
         event.preventDefault();
+        const name = ReactDOM.findDOMNode(this.Name).value;
+        if (!name || name.length === 0) {
+            return;
+        }
     }
 
     handleChange(event) {
@@ -65,22 +72,26 @@ class Forms extends React.Component {
     }
 
     handleSave() {
-        let form = this.state.form;
+        const form = this.state.form;
 
         if (this.state.editMode === EDIT_MODES.ADD) {
-            database.save(DATA_KEYID, this.state.form);
-            let forms = database.fetch(DATA_KEYID);
-            this.setState({ forms: forms });
+            if (this.validateForm()) {
+                database.save(DATA_KEYID, this.state.form);
+                let forms = database.fetch(DATA_KEYID);
+                this.setState({ forms: forms, isEditing: false, editMode: EDIT_MODES.NONE });
+            }
         }
         else if (this.state.editMode === EDIT_MODES.EDIT) {
-            database.save(DATA_KEYID, this.state.form);
+            if (this.validateForm()) {
+                database.save(DATA_KEYID, this.state.form);
+                this.setState({ isEditing: false, editMode: EDIT_MODES.NONE });
+            }
         }
         else if (this.state.editMode === EDIT_MODES.DELETE) {
             database.removeOne(DATA_KEYID, form);
             let forms = database.fetch(DATA_KEYID);
-            this.setState({ forms: forms });
+            this.setState({ forms: forms, isEditing: false, editMode: EDIT_MODES.NONE });
         }
-        this.setState({ isEditing: false, editMode: EDIT_MODES.NONE });
     }
 
     handleCancel() {
@@ -94,6 +105,24 @@ class Forms extends React.Component {
                 editMode: EDIT_MODES.ADD,
                 form: database.getModel()
             });
+    }
+
+    validateForm() {
+        let isValid = true;
+
+        const form = this.state.form;
+        const name = form.Name;
+        const description = form.Description;
+
+        if (!name || name.length === 0) {
+            isValid = false;
+        }
+
+        if (!description || description.length === 0) {
+            isValid = false;
+        }
+
+        return isValid;
     }
 
     getForm(id) {
@@ -116,8 +145,7 @@ class Forms extends React.Component {
                         <div>
                             <FormsHeader editMode={this.state.editMode} />
                             <div className="row">
-                                <div className="col-md-2 col-sm-0"></div>
-                                <div className="col-md-8 col-sm-12">
+                                <div className="col-md-12 col-sm-12">
                                     <div className="jumbotron text-center">
                                         <form className="form-signin" onSubmit={this.handleSubmit.bind(this)}>
                                             <div className="form-row text-left">
@@ -142,7 +170,7 @@ class Forms extends React.Component {
                                 </div>
                             </div>
                             <div className="row">
-                                <div className="col-sm-6"><button id="Save" name="Save1" type="button" className="btn btn-sm btn-info btn-block" onClick={this.handleSave.bind(this, 0)}>Save</button></div>
+                                <div className="col-sm-6"><button id="Save" name="Save1" type="button" className="btn btn-sm btn-info btn-block" onClick={this.handleSave.bind(this, 0)}>{this.state.editMode === EDIT_MODES.DELETE ? 'Delete' : 'Save'}</button></div>
                                 <div className="col-sm-6"><button id="Cancel" name="Cancel1" type="button" className="btn btn-sm btn-default btn-block" onClick={this.handleCancel.bind(this, 0)}>Cancel</button></div>
                             </div>
                         </div>
@@ -166,9 +194,9 @@ class Forms extends React.Component {
 
             return (
                 <div className="container">
-                
-                    <div className="row"><div className="col-md-8"> <FormsHeader editMode={this.state.editMode} /></div> 
-                    <div className="col-md-4"><button id="AddNew" name="AddNew" type="button" className="btn btn-sm btn-info btn-block" onClick={this.handleAddNew.bind(this, 0)}>Add New </button></div></div>
+
+                    <div className="row"><div className="col-md-8"> <FormsHeader editMode={this.state.editMode} /></div>
+                        <div className="col-md-4"><button id="AddNew" name="AddNew" type="button" className="btn btn-sm btn-info btn-block" onClick={this.handleAddNew.bind(this, 0)}>Add New </button></div></div>
                     <div className="row"><div className="col-md-12"><div><hr /></div></div></div>
                     <div className="row">
                         <div className="col-md-12">
